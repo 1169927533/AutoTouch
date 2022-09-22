@@ -4,10 +4,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Outline;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
 import com.zhang.autotouch.fw_permission.FloatWinPermissionCompat;
@@ -25,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
     private final String STRING_ACCESS = "无障碍服务";
     private final String STRING_ALERT = "悬浮窗权限";
 
+    public static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = this;
         tvStart = findViewById(R.id.tv_start);
         tvStart.setOnClickListener(new View.OnClickListener() {
             @Override

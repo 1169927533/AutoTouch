@@ -1,5 +1,8 @@
 package com.zhang.autotouch.dialog;
 
+import static com.zhang.autotouch.bean.TouchEvent.ACTION_CIRCLE;
+import static com.zhang.autotouch.bean.TouchEvent.ACTION_STARTALL;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuDialog extends BaseServiceDialog implements View.OnClickListener {
-    private Button btStop;
+    private Button btStop,btn_cyclestarts;
     private RecyclerView rvPoints;
 
     private AddPointDialog addPointDialog;
@@ -37,9 +40,11 @@ public class MenuDialog extends BaseServiceDialog implements View.OnClickListene
     private TouchPointAdapter touchPointAdapter;
     private RecordDialog recordDialog;
     private List<TouchPoint> mList = new ArrayList<>();
+    private Context context;
 
     public MenuDialog(@NonNull Context context) {
         super(context);
+        this.context = context;
     }
 
     @Override
@@ -64,14 +69,15 @@ public class MenuDialog extends BaseServiceDialog implements View.OnClickListene
         findViewById(R.id.bt_add).setOnClickListener(this);
         findViewById(R.id.bt_record).setOnClickListener(this);
         findViewById(R.id.bt_startAll).setOnClickListener(this);
+        findViewById(R.id.btn_cyclestarts).setOnClickListener(this);
         btStop = findViewById(R.id.bt_stop);
         btStop.setOnClickListener(this);
         rvPoints = findViewById(R.id.rv);
-        touchPointAdapter = new TouchPointAdapter();
+        touchPointAdapter = new TouchPointAdapter(context);
         touchPointAdapter.setOnItemClickListener(new TouchPointAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, TouchPoint touchPoint) {
-                btStop.setVisibility(View.VISIBLE);
+//                btStop.setVisibility(View.VISIBLE);
                 dismiss();
                 TouchEvent.postStartAction(touchPoint);
                 ToastUtil.show("已开启触控点：" + touchPoint.getName());
@@ -82,9 +88,9 @@ public class MenuDialog extends BaseServiceDialog implements View.OnClickListene
         setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (TouchEventManager.getInstance().isPaused()) {
+               /* if (TouchEventManager.getInstance().isPaused()) {
                     TouchEvent.postContinueAction();
-                }
+                }*/
             }
         });
     }
@@ -147,38 +153,15 @@ public class MenuDialog extends BaseServiceDialog implements View.OnClickListene
                 }
                 break;
             case R.id.bt_startAll:
-                thread.start();
+                TouchEvent.postStartAction(ACTION_STARTALL);
                 dismiss();
                 break;
-
+            case R.id.btn_cyclestarts:
+                TouchEvent.postStartAction(ACTION_CIRCLE);
+                dismiss();
+                break;
         }
     }
-
-    Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            TouchPoint touchPoint = (TouchPoint) msg.obj;
-            Log.i("zjc", "jinali l ");
-            TouchEvent.postStartAction(touchPoint);
-            return false;
-        }
-    });
-
-    Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            for (int i = 0; i < mList.size(); i++) {
-                try {
-                    Thread.sleep(mList.get(i).getDelay() * 1000);
-                    Message message = new Message();
-                    message.obj = mList.get(i);
-                    mHandler.sendMessage(message);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    });
 
 
     public void setListener(Listener listener) {

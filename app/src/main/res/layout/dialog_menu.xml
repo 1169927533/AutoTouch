@@ -11,6 +11,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             tools:visibility="visible"
             android:textColor="#fff"
@@ -18,12 +19,22 @@
             android:id="@+id/bt_startAll"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="开始"
+            android:text="单遍开始"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="50dp" />
         <Button
             tools:visibility="visible"
+            android:textColor="#fff"
+            android:background="#f10"
+            android:id="@+id/btn_cyclestarts"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="循环开始"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp" />
+        <Button
             android:visibility="gone"
             android:textColor="#fff"
             android:background="#f10"
@@ -47,6 +58,7 @@
             android:layout_height="50dp" />
 
         <Button
+            android:visibility="gone"
             android:layout_marginStart="1dp"
             android:textColor="#fff"
             android:background="#666"
@@ -63,16 +75,18 @@
             android:background="#666"
             android:id="@+id/bt_exit"
             android:textSize="15sp"
-            android:text="退出助手"
+            android:text="退出"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_height="50dp" />
 
     </LinearLayout>
 
     <TextView
         android:layout_marginTop="10dp"
-        android:textSize="18sp"
+        android:textSize="18dp"
+        android:textColor="#000000"
+        android:textStyle="bold"
         android:text="触控点列表"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -12,11 +12,13 @@ public class TouchEvent {
     public static final int ACTION_PAUSE = 2;
     public static final int ACTION_CONTINUE = 3;
     public static final int ACTION_STOP = 4;
+    public static final int ACTION_STARTALL = 5;//start all
+    public static final int ACTION_CIRCLE=6;
 
     private int action;
     private TouchPoint touchPoint;
 
-    private TouchEvent(int action) {
+    public TouchEvent(int action) {
         this(action, null);
     }
 
@@ -35,6 +37,10 @@ public class TouchEvent {
 
     public TouchPoint getTouchPoint() {
         return touchPoint;
+    }
+
+    public static void postStartAction(int type) {
+        postAction(new TouchEvent(type));
     }
 
     public static void postStartAction(TouchPoint touchPoint) {

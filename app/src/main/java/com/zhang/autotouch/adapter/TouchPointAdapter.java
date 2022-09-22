@@ -1,6 +1,7 @@
 package com.zhang.autotouch.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zhang.autotouch.MainActivity;
 import com.zhang.autotouch.R;
 import com.zhang.autotouch.bean.TouchPoint;
+import com.zhang.autotouch.utils.SpUtils;
 
 import java.util.List;
 
-public class TouchPointAdapter extends RecyclerView.Adapter<TouchPointAdapter.TouchPointHolder> implements View.OnClickListener {
-
+public class TouchPointAdapter extends RecyclerView.Adapter<TouchPointAdapter.TouchPointHolder> implements View.OnClickListener, View.OnLongClickListener {
     private List<TouchPoint> touchPointList;
     private OnItemClickListener onItemClickListener;
 //    private int touchPosition = -1;
-
-    public TouchPointAdapter() {
+    private Context context;
+    public TouchPointAdapter(Context context) {
+        this.context = context;
     }
 
     public void setTouchPointList(List<TouchPoint> touchPointList) {
@@ -34,6 +37,7 @@ public class TouchPointAdapter extends RecyclerView.Adapter<TouchPointAdapter.To
     public TouchPointHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_touch_point, parent, false);
         view.setOnClickListener(this);
+        view.setOnLongClickListener(this);
         return new TouchPointHolder(view);
     }
 
@@ -65,9 +69,21 @@ public class TouchPointAdapter extends RecyclerView.Adapter<TouchPointAdapter.To
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if (onItemClickListener != null) {
+            int postion = (int) v.getTag();
+            touchPointList.remove(postion);
+            notifyDataSetChanged();
+            SpUtils.setTouchPoints(MainActivity.mContext,touchPointList);
+        }
+        return false;
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, TouchPoint touchPoint);
